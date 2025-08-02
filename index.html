@@ -84,13 +84,65 @@
             animation: float 3s ease-in-out infinite;
         }
 
-        .transform-feedback {
-            transform: translateY(10px);
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90vw;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            transform: scale(0.8) translateY(50px);
             transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
-        .transform-feedback.show {
-            transform: translateY(0);
+        .modal-overlay.show .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .close-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .close-button:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: scale(1.1);
         }
     </style>
 </head>
@@ -113,6 +165,78 @@
         <div class="mb-8">
             <h1 class="font-playfair text-4xl font-bold text-custom-gradient mb-3">TrustMeBro</h1>
             <p class="text-gray-600 text-lg font-light italic">Professional password strength analysis ✨</p>
+        </div>
+
+        <!-- Results Modal -->
+        <div class="modal-overlay" id="resultsModal">
+            <div class="modal-content relative">
+                <button class="close-button" id="closeModal">×</button>
+                
+                <div class="text-center mb-8">
+                    <h2 class="font-playfair text-3xl font-bold text-custom-gradient mb-3">Password Analysis Results</h2>
+                    <p class="text-gray-600 text-lg italic">The moment of truth has arrived... 🎭</p>
+                </div>
+
+                <!-- Feedback Card in Modal -->
+                <div class="feedback-gradient-1 rounded-2xl p-6 text-white shadow-xl mb-6 overflow-hidden relative" id="modalFeedbackCard">
+                    <div class="text-2xl font-semibold mb-4 flex items-center justify-center gap-3" id="modalStrengthText">
+                        💔 Painfully Weak
+                    </div>
+                    
+                    <div class="flex gap-2 mb-6 justify-center">
+                        <div class="w-12 h-3 bg-white bg-opacity-30 rounded-full transition-all duration-300" id="modalBar1"></div>
+                        <div class="w-12 h-3 bg-white bg-opacity-30 rounded-full transition-all duration-300" id="modalBar2"></div>
+                        <div class="w-12 h-3 bg-white bg-opacity-30 rounded-full transition-all duration-300" id="modalBar3"></div>
+                        <div class="w-12 h-3 bg-white bg-opacity-30 rounded-full transition-all duration-300" id="modalBar4"></div>
+                        <div class="w-12 h-3 bg-white bg-opacity-30 rounded-full transition-all duration-300" id="modalBar5"></div>
+                    </div>
+
+                    <div class="text-lg leading-relaxed mb-6 italic opacity-90 text-center" id="modalSarcasticComment">
+                        Oh honey, that password is so weak it couldn't protect a diary from a nosy sibling 💅
+                    </div>
+                    
+                    <div class="animate-shimmer"></div>
+                </div>
+
+                <!-- Sarcastic Suggestions in Modal -->
+                <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white border-opacity-30 overflow-hidden relative" id="modalSarcasticSuggestions">
+                    <h4 class="text-white mb-5 text-xl font-medium text-center">📋 "Helpful" Suggestions</h4>
+                    <ul class="list-none text-left space-y-3" id="modalTipsList">
+                        <li class="pl-6 relative text-white opacity-90 text-base">
+                            <span class="absolute left-0 text-red-300 text-lg">❌</span>
+                            Must contain at least 47 characters (because 8 is for quitters)
+                        </li>
+                        <li class="pl-6 relative text-white opacity-90 text-base">
+                            <span class="absolute left-0 text-red-300 text-lg">❌</span>
+                            Include symbols from at least 3 dead languages
+                        </li>
+                        <li class="pl-6 relative text-white opacity-90 text-base">
+                            <span class="absolute left-0 text-red-300 text-lg">❌</span>
+                            Add your social security number backwards (kidding, please don't)
+                        </li>
+                        <li class="pl-6 relative text-white opacity-90 text-base">
+                            <span class="absolute left-0 text-red-300 text-lg">❌</span>
+                            Must include the exact time you created it down to the millisecond
+                        </li>
+                        <li class="pl-6 relative text-white opacity-90 text-base">
+                            <span class="absolute left-0 text-red-300 text-lg">❌</span>
+                            Should contain a haiku about cybersecurity written in binary
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="text-center mt-8">
+                    <button class="px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium rounded-2xl transition-all duration-300 hover:shadow-lg hover:-translate-y-1" id="tryAgainButton">
+                        😅 Try Another Password
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hidden original cards for reference -->
+        <div class="hidden">
+            <div class="feedback-gradient-1 rounded-2xl p-6 text-white shadow-xl opacity-0 transform-feedback overflow-hidden relative" id="feedbackCard"></div>
+            <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-2xl p-5 shadow-lg border border-white border-opacity-30 mt-5 opacity-0 transform-feedback overflow-hidden relative" id="sarcasticSuggestions"></div>
         </div>
 
         <!-- Input -->
@@ -237,11 +361,21 @@
     <script>
         const passwordInput = document.getElementById('passwordInput');
         const confirmButton = document.getElementById('confirmButton');
-        const feedbackCard = document.getElementById('feedbackCard');
-        const sarcasticSuggestions = document.getElementById('sarcasticSuggestions');
-        const strengthText = document.getElementById('strengthText');
-        const sarcasticComment = document.getElementById('sarcasticComment');
-        const tipsList = document.getElementById('tipsList');
+        const resultsModal = document.getElementById('resultsModal');
+        const closeModal = document.getElementById('closeModal');
+        const tryAgainButton = document.getElementById('tryAgainButton');
+        const modalFeedbackCard = document.getElementById('modalFeedbackCard');
+        const modalSarcasticSuggestions = document.getElementById('modalSarcasticSuggestions');
+        const modalStrengthText = document.getElementById('modalStrengthText');
+        const modalSarcasticComment = document.getElementById('modalSarcasticComment');
+        const modalTipsList = document.getElementById('modalTipsList');
+        const modalBars = [
+            document.getElementById('modalBar1'),
+            document.getElementById('modalBar2'),
+            document.getElementById('modalBar3'),
+            document.getElementById('modalBar4'),
+            document.getElementById('modalBar5')
+        ];
         const bars = [
             document.getElementById('bar1'),
             document.getElementById('bar2'),
@@ -350,35 +484,23 @@
                 return; // Don't analyze empty passwords
             }
             
-            // Hide initial requirements and tips
-            document.getElementById('initialRequirements').style.display = 'none';
-            document.getElementById('initialTips').style.display = 'none';
-
-            // Show feedback cards
-            feedbackCard.classList.add('show', 'opacity-100');
-            feedbackCard.classList.remove('opacity-0');
-
-            // Show sarcastic suggestions after typing
-            sarcasticSuggestions.classList.add('show', 'opacity-100');
-            sarcasticSuggestions.classList.remove('opacity-0');
-
             // Always show as weak, but with varying degrees of sarcasm
             const levelIndex = Math.min(Math.floor(password.length / 3), 4);
             const level = strengthLevels[levelIndex];
 
-            strengthText.textContent = level.text;
+            modalStrengthText.textContent = level.text;
             
             // Remove all gradient classes and add the current one
-            feedbackCard.className = feedbackCard.className.replace(/feedback-gradient-\d/g, '');
-            feedbackCard.classList.add(level.gradient);
+            modalFeedbackCard.className = modalFeedbackCard.className.replace(/feedback-gradient-\d/g, '');
+            modalFeedbackCard.classList.add(level.gradient);
 
             // Apply same gradient to suggestions
-            sarcasticSuggestions.className = sarcasticSuggestions.className.replace(/feedback-gradient-\d/g, '');
-            sarcasticSuggestions.classList.add(level.gradient);
+            modalSarcasticSuggestions.className = modalSarcasticSuggestions.className.replace(/feedback-gradient-\d/g, '');
+            modalSarcasticSuggestions.classList.add(level.gradient);
 
             // Fill bars based on length but cap at 2 bars for maximum sarcasm
             const barsToFill = Math.min(Math.floor(password.length / 4), 2);
-            bars.forEach((bar, index) => {
+            modalBars.forEach((bar, index) => {
                 if (index < barsToFill) {
                     bar.classList.remove('bg-opacity-30');
                     bar.classList.add('bg-opacity-80', 'shadow-sm');
@@ -389,28 +511,29 @@
             });
 
             // Update sarcastic comment
-            sarcasticComment.textContent = getRandomComment();
+            modalSarcasticComment.textContent = getRandomComment();
 
             // Update tips
             const tips = getRandomTips();
-            tipsList.innerHTML = tips.map(tip => `
-                <li class="pl-5 relative text-white opacity-90">
-                    <span class="absolute left-0 text-red-300">❌</span>
+            modalTipsList.innerHTML = tips.map(tip => `
+                <li class="pl-6 relative text-white opacity-90 text-base">
+                    <span class="absolute left-0 text-red-300 text-lg">❌</span>
                     ${tip}
                 </li>
             `).join('');
+
+            // Show the modal
+            resultsModal.classList.add('show');
         }
 
-        function resetFeedback() {
-            if (passwordInput.value.trim() === '') {
-                // Show initial content when password is empty
-                document.getElementById('initialRequirements').style.display = 'block';
-                document.getElementById('initialTips').style.display = 'block';
-                feedbackCard.classList.remove('show');
-                feedbackCard.classList.add('opacity-0');
-                sarcasticSuggestions.classList.remove('show');
-                sarcasticSuggestions.classList.add('opacity-0');
-            }
+        function closeResultsModal() {
+            resultsModal.classList.remove('show');
+        }
+
+        function resetForNewPassword() {
+            closeResultsModal();
+            passwordInput.value = '';
+            passwordInput.focus();
         }
 
         // Event listeners
@@ -422,7 +545,22 @@
             }
         });
 
-        passwordInput.addEventListener('input', resetFeedback);
+        closeModal.addEventListener('click', closeResultsModal);
+        tryAgainButton.addEventListener('click', resetForNewPassword);
+
+        // Close modal when clicking outside
+        resultsModal.addEventListener('click', function(e) {
+            if (e.target === resultsModal) {
+                closeResultsModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && resultsModal.classList.contains('show')) {
+                closeResultsModal();
+            }
+        });
 
         // Add some sparkle animations
         const sparkles = document.querySelectorAll('.animate-twinkle');
