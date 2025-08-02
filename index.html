@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Reality Check ✨</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'playfair': ['Playfair Display', 'serif'],
+                        'inter': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .bg-custom-gradient {
+            background: linear-gradient(rgb(199, 210, 254), rgb(254, 202, 202), rgb(254, 249, 195));
+        }
+        
+        .text-custom-gradient {
+            background: linear-gradient(135deg, rgb(199, 210, 254), rgb(254, 202, 202));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .feedback-gradient-1 {
+            background: linear-gradient(135deg, rgb(254, 202, 202), rgb(254, 249, 195));
+        }
+        
+        .feedback-gradient-2 {
+            background: linear-gradient(135deg, rgb(199, 210, 254), rgb(254, 202, 202));
+        }
+        
+        .feedback-gradient-3 {
+            background: linear-gradient(135deg, rgb(254, 202, 202), rgb(199, 210, 254));
+        }
+        
+        .feedback-gradient-4 {
+            background: linear-gradient(135deg, rgb(254, 249, 195), rgb(254, 202, 202));
+        }
+        
+        .feedback-gradient-5 {
+            background: linear-gradient(135deg, rgb(199, 210, 254), rgb(254, 249, 195));
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .animate-twinkle {
+            animation: twinkle 2s infinite;
+        }
+
+        .animate-shimmer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .transform-feedback {
+            transform: translateY(10px);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .transform-feedback.show {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-custom-gradient min-h-screen font-inter flex items-center justify-center p-5 relative overflow-x-hidden">
+    <!-- Sparkles -->
+    <div class="absolute top-3 right-5 text-xl animate-twinkle">✨</div>
+    <div class="absolute top-8 left-8 text-xl animate-twinkle" style="animation-delay: 0.5s;">⭐</div>
+    <div class="absolute bottom-5 right-10 text-xl animate-twinkle" style="animation-delay: 1s;">💫</div>
+
+    <!-- Floating Icons -->
+    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-10 z-0">
+        <div class="absolute text-5xl animate-float" style="top: -100px; left: -150px; animation-delay: 0s;">🔒</div>
+        <div class="absolute text-5xl animate-float" style="top: -50px; right: -120px; animation-delay: 1s;">🛡️</div>
+        <div class="absolute text-5xl animate-float" style="bottom: -80px; left: -100px; animation-delay: 2s;">🔐</div>
+        <div class="absolute text-5xl animate-float" style="bottom: -60px; right: -140px; animation-delay: 1.5s;">🗝️</div>
+    </div>
+
+    <div class="bg-white bg-opacity-95 backdrop-blur-xl rounded-3xl p-10 shadow-2xl max-w-lg w-full text-center border border-white border-opacity-20 relative z-10">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="font-playfair text-4xl font-bold text-custom-gradient mb-3">TrustMeBro</h1>
+            <p class="text-gray-600 text-lg font-light italic">Professional password strength analysis ✨</p>
+        </div>
+
+        <!-- Input -->
+        <div class="mb-6">
+            <input 
+                type="password" 
+                class="w-full px-6 py-5 border-2 border-gray-200 rounded-2xl text-lg bg-white bg-opacity-80 transition-all duration-300 focus:outline-none focus:border-red-200 focus:bg-white focus:shadow-lg focus:-translate-y-1 font-inter"
+                placeholder="Create your ultra-secure password..."
+                id="passwordInput"
+            >
+            <button 
+                class="w-full mt-4 px-6 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium rounded-2xl transition-all duration-300 hover:shadow-lg hover:-translate-y-1 focus:outline-none"
+                id="confirmButton"
+            >
+                ✨ Analyze My Password ✨
+            </button>
+        </div>
+
+        <!-- Initial Requirements -->
+        <div id="initialRequirements" class="bg-white bg-opacity-90 backdrop-blur-sm rounded-2xl p-5 shadow-lg border border-white border-opacity-30 mb-5">
+            <h4 class="text-purple-600 mb-4 text-lg font-medium">📋 Password Requirements</h4>
+            <ul class="list-none text-left space-y-2">
+                <li class="text-gray-700 text-sm pl-5 relative">
+                    <span class="absolute left-0 text-green-500">✓</span>
+                    Must contain at least 8 characters
+                </li>
+                <li class="text-gray-700 text-sm pl-5 relative">
+                    <span class="absolute left-0 text-green-500">✓</span>
+                    Include uppercase and lowercase letters
+                </li>
+                <li class="text-gray-700 text-sm pl-5 relative">
+                    <span class="absolute left-0 text-green-500">✓</span>
+                    Add numbers and special characters
+                </li>
+                <li class="text-gray-700 text-sm pl-5 relative">
+                    <span class="absolute left-0 text-green-500">✓</span>
+                    Avoid common dictionary words
+                </li>
+                <li class="text-gray-700 text-sm pl-5 relative">
+                    <span class="absolute left-0 text-green-500">✓</span>
+                    No personal information (birthdays, names)
+                </li>
+            </ul>
+        </div>
+
+        <!-- Initial Tips -->
+        <div id="initialTips" class="bg-white bg-opacity-90 backdrop-blur-sm rounded-2xl p-5 shadow-lg border border-white border-opacity-30 mb-5">
+            <h4 class="text-purple-600 mb-4 text-lg font-medium">😏 Pro Tips</h4>
+            <ul class="list-none text-left space-y-2">
+                <li class="text-gray-700 text-sm pl-5 relative">
+                    <span class="absolute left-0">😈</span>
+                    Your password is probably trash, but let's pretend otherwise
+                </li>
+                <li class="text-gray-700 text-sm pl-5 relative">
+                    <span class="absolute left-0">😈</span>
+                    Using 'password123' is basically a love letter to hackers
+                </li>
+                <li class="text-gray-700 text-sm pl-5 relative">
+                    <span class="absolute left-0">😈</span>
+                    Your pet's name isn't as clever as you think it is
+                </li>
+                <li class="text-gray-700 text-sm pl-5 relative">
+                    <span class="absolute left-0">😈</span>
+                    Adding your birth year doesn't make you a security genius
+                </li>
+                <li class="text-gray-700 text-sm pl-5 relative">
+                    <span class="absolute left-0">😈</span>
+                    That special character you're so proud of? Everyone uses it
+                </li>
+            </ul>
+        </div>
+
+        <!-- Feedback Card -->
+        <div class="feedback-gradient-1 rounded-2xl p-6 text-white shadow-xl opacity-0 transform-feedback overflow-hidden relative" id="feedbackCard">
+            <div class="text-xl font-semibold mb-3 flex items-center justify-center gap-3" id="strengthText">
+                💔 Painfully Weak
+            </div>
+            
+            <div class="flex gap-1 mb-4 justify-center">
+                <div class="w-10 h-2 bg-white bg-opacity-30 rounded-full transition-all duration-300" id="bar1"></div>
+                <div class="w-10 h-2 bg-white bg-opacity-30 rounded-full transition-all duration-300" id="bar2"></div>
+                <div class="w-10 h-2 bg-white bg-opacity-30 rounded-full transition-all duration-300" id="bar3"></div>
+                <div class="w-10 h-2 bg-white bg-opacity-30 rounded-full transition-all duration-300" id="bar4"></div>
+                <div class="w-10 h-2 bg-white bg-opacity-30 rounded-full transition-all duration-300" id="bar5"></div>
+            </div>
+
+            <div class="text-base leading-relaxed mb-4 italic opacity-90" id="sarcasticComment">
+                Oh honey, that password is so weak it couldn't protect a diary from a nosy sibling 💅
+            </div>
+            
+            <div class="animate-shimmer"></div>
+        </div>
+
+        <!-- Sarcastic Suggestions (appears after typing) -->
+        <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-2xl p-5 shadow-lg border border-white border-opacity-30 mt-5 opacity-0 transform-feedback overflow-hidden relative" id="sarcasticSuggestions">
+            <h4 class="text-white mb-4 text-lg font-medium">📋 "Helpful" Suggestions</h4>
+            <ul class="list-none text-left space-y-2 text-sm" id="tipsList">
+                <li class="pl-5 relative text-white opacity-90">
+                    <span class="absolute left-0 text-red-300">❌</span>
+                    Must contain at least 47 characters (because 8 is for quitters)
+                </li>
+                <li class="pl-5 relative text-white opacity-90">
+                    <span class="absolute left-0 text-red-300">❌</span>
+                    Include symbols from at least 3 dead languages
+                </li>
+                <li class="pl-5 relative text-white opacity-90">
+                    <span class="absolute left-0 text-red-300">❌</span>
+                    Add your social security number backwards (kidding, please don't)
+                </li>
+                <li class="pl-5 relative text-white opacity-90">
+                    <span class="absolute left-0 text-red-300">❌</span>
+                    Must include the exact time you created it down to the millisecond
+                </li>
+                <li class="pl-5 relative text-white opacity-90">
+                    <span class="absolute left-0 text-red-300">❌</span>
+                    Should contain a haiku about cybersecurity written in binary
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const passwordInput = document.getElementById('passwordInput');
+        const confirmButton = document.getElementById('confirmButton');
+        const feedbackCard = document.getElementById('feedbackCard');
+        const sarcasticSuggestions = document.getElementById('sarcasticSuggestions');
+        const strengthText = document.getElementById('strengthText');
+        const sarcasticComment = document.getElementById('sarcasticComment');
+        const tipsList = document.getElementById('tipsList');
+        const bars = [
+            document.getElementById('bar1'),
+            document.getElementById('bar2'),
+            document.getElementById('bar3'),
+            document.getElementById('bar4'),
+            document.getElementById('bar5')
+        ];
+
+        const sarcasticComments = [
+            "Oh sweetie, that password is so basic it makes vanilla ice cream look exotic 🍦",
+            "Wow, a password that could be cracked by a caffeinated hamster with a smartphone 🐹",
+            "That's not a password, that's a gentle invitation to hackers 💅",
+            "Your password has the security strength of a paper umbrella in a hurricane ☂️",
+            "Congratulations! You've created a password that screams 'please hack me' 🎉",
+            "That password is weaker than my WiFi signal during a thunderstorm ⚡",
+            "Oh honey, that password couldn't protect a cookie jar from a determined toddler 🍪",
+            "I've seen stronger security on a diary with a plastic lock from the dollar store 📔",
+            "That password is so fragile it would break if someone sneezed near it 💔",
+            "Your password has less protection than a picnic basket from a colony of ants 🐜",
+            "Ah yes, the classic 'my password is basically a welcome mat' approach 🚪",
+            "That password is weaker than decaf coffee on a Monday morning ☕",
+            "Oh darling, even my grandmother's flip phone has better security 📱",
+            "Your password is so predictable, fortune tellers are embarrassed 🔮",
+            "That's not security, that's basically leaving your front door wide open with a neon sign 🏠"
+        ];
+
+        const weakTips = [
+            [
+                "Must contain at least 47 characters (because 8 is for quitters)",
+                "Include symbols from at least 3 dead languages",
+                "Add your social security number backwards (kidding, please don't)",
+                "Must include the exact time you created it down to the millisecond",
+                "Should contain a haiku about cybersecurity written in binary"
+            ],
+            [
+                "Needs uppercase letters that express your deepest emotions",
+                "Include numbers that represent your life disappointments",
+                "Add special characters that would make a mathematician weep",
+                "Must be pronounceable by dolphins but not humans",
+                "Should include at least one character that doesn't exist yet"
+            ],
+            [
+                "Must pass a background check and credit score evaluation",
+                "Include your Myers-Briggs personality type in Klingon",
+                "Add the GPS coordinates of where you first learned to ride a bike",
+                "Should contain the chemical formula for your favorite pizza topping",
+                "Must include a personal recommendation letter from your router"
+            ],
+            [
+                "Needs to be at least 73% organic and gluten-free",
+                "Include the birthdate of your future great-grandchildren",
+                "Add symbols that would confuse ancient civilizations",
+                "Must contain your astrological chart converted to ASCII art",
+                "Should include the sound a confused giraffe makes, phonetically"
+            ],
+            [
+                "Must be approved by a committee of cybersecurity grandmothers",
+                "Include numbers from at least 4 different number systems",
+                "Add characters that exist only in your imagination",
+                "Should contain your life story condensed into 12 symbols",
+                "Must include the Wi-Fi password from every place you've ever visited"
+            ],
+            [
+                "Needs to rhyme with 'supercalifragilisticexpialidocious'",
+                "Include the exact number of steps from your bed to your fridge",
+                "Add symbols that would make your keyboard jealous of other keyboards",
+                "Must contain your credit score encrypted with your shoe size",
+                "Should include a personalized message to future hackers"
+            ],
+            [
+                "Must be readable by aliens but incomprehensible to humans",
+                "Include your browser history from 2003 (we don't recommend this)",
+                "Add the molecular structure of your last good decision",
+                "Should contain your pet's maiden name and mother's favorite food",
+                "Must include at least 17 different types of punctuation marks"
+            ],
+            [
+                "Needs to be longer than your last relationship",
+                "Include the exact hex code of your soul's aura",
+                "Add characters that would make Unicode developers quit their jobs",
+                "Should contain your deepest fears written in emoji",
+                "Must include the barcode from your morning coffee cup"
+            ]
+        ];
+
+        const strengthLevels = [
+            { text: "💔 Devastatingly Weak", gradient: "feedback-gradient-1" },
+            { text: "😢 Tragically Feeble", gradient: "feedback-gradient-2" },
+            { text: "😬 Embarrassingly Poor", gradient: "feedback-gradient-3" },
+            { text: "🙄 Disappointingly Basic", gradient: "feedback-gradient-4" },
+            { text: "💅 Predictably Mediocre", gradient: "feedback-gradient-5" }
+        ];
+
+        function getRandomComment() {
+            return sarcasticComments[Math.floor(Math.random() * sarcasticComments.length)];
+        }
+
+        function getRandomTips() {
+            return weakTips[Math.floor(Math.random() * weakTips.length)];
+        }
+
+        function analyzePassword() {
+            const password = passwordInput.value.trim();
+            
+            if (password.length === 0) {
+                return; // Don't analyze empty passwords
+            }
+            
+            // Hide initial requirements and tips
+            document.getElementById('initialRequirements').style.display = 'none';
+            document.getElementById('initialTips').style.display = 'none';
+
+            // Show feedback cards
+            feedbackCard.classList.add('show', 'opacity-100');
+            feedbackCard.classList.remove('opacity-0');
+
+            // Show sarcastic suggestions after typing
+            sarcasticSuggestions.classList.add('show', 'opacity-100');
+            sarcasticSuggestions.classList.remove('opacity-0');
+
+            // Always show as weak, but with varying degrees of sarcasm
+            const levelIndex = Math.min(Math.floor(password.length / 3), 4);
+            const level = strengthLevels[levelIndex];
+
+            strengthText.textContent = level.text;
+            
+            // Remove all gradient classes and add the current one
+            feedbackCard.className = feedbackCard.className.replace(/feedback-gradient-\d/g, '');
+            feedbackCard.classList.add(level.gradient);
+
+            // Apply same gradient to suggestions
+            sarcasticSuggestions.className = sarcasticSuggestions.className.replace(/feedback-gradient-\d/g, '');
+            sarcasticSuggestions.classList.add(level.gradient);
+
+            // Fill bars based on length but cap at 2 bars for maximum sarcasm
+            const barsToFill = Math.min(Math.floor(password.length / 4), 2);
+            bars.forEach((bar, index) => {
+                if (index < barsToFill) {
+                    bar.classList.remove('bg-opacity-30');
+                    bar.classList.add('bg-opacity-80', 'shadow-sm');
+                } else {
+                    bar.classList.add('bg-opacity-30');
+                    bar.classList.remove('bg-opacity-80', 'shadow-sm');
+                }
+            });
+
+            // Update sarcastic comment
+            sarcasticComment.textContent = getRandomComment();
+
+            // Update tips
+            const tips = getRandomTips();
+            tipsList.innerHTML = tips.map(tip => `
+                <li class="pl-5 relative text-white opacity-90">
+                    <span class="absolute left-0 text-red-300">❌</span>
+                    ${tip}
+                </li>
+            `).join('');
+        }
+
+        function resetFeedback() {
+            if (passwordInput.value.trim() === '') {
+                // Show initial content when password is empty
+                document.getElementById('initialRequirements').style.display = 'block';
+                document.getElementById('initialTips').style.display = 'block';
+                feedbackCard.classList.remove('show');
+                feedbackCard.classList.add('opacity-0');
+                sarcasticSuggestions.classList.remove('show');
+                sarcasticSuggestions.classList.add('opacity-0');
+            }
+        }
+
+        // Event listeners
+        confirmButton.addEventListener('click', analyzePassword);
+        
+        passwordInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                analyzePassword();
+            }
+        });
+
+        passwordInput.addEventListener('input', resetFeedback);
+
+        // Add some sparkle animations
+        const sparkles = document.querySelectorAll('.animate-twinkle');
+        sparkles.forEach(sparkle => {
+            sparkle.addEventListener('animationiteration', () => {
+                const emojis = ['✨', '⭐', '💫', '🌟', '💖', '🎀', '🦄'];
+                sparkle.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            });
+        });
+    </script>
+</body>
+</html>
